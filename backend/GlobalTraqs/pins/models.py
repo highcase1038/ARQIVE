@@ -1,0 +1,154 @@
+from django.db import models
+from django.conf import settings
+from django.contrib.auth.models import User
+from PIL import Image
+from datetime import datetime
+from io import BytesIO
+from django.core.files import File
+from django.core.validators import MaxValueValidator, MinValueValidator
+
+
+class pin(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              null=True, on_delete=models.CASCADE, related_name='userStories')
+    title = models.CharField(max_length=150)
+    description = models.TextField()
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    category = models.ForeignKey(
+        "categoryType", on_delete=models.CASCADE, null=True, related_name='selected_category')
+    # 1 is community, 2: historical, 3: personal
+    upVotes = models.PositiveSmallIntegerField(default=0)
+    startDate = models.DateField('startDate', blank=True, null=True)
+    endDate = models.DateField('endDate', blank=True, null=True)
+    is_anonymous_pin = models.BooleanField(default=False, blank=False)
+    postDate = models.DateField('postDate', blank=True, null=True)
+    lastEditDate = models.DateField('lastEditDate', blank=True, null=True)
+    lastPersonEdit = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    # addresses and postcode might differ in other countries
+    postCode = models.CharField(blank=True, null=True, max_length=150)
+    locality = models.CharField(blank=True, null=True, max_length=150)
+    region = models.CharField(blank=True, null=True, max_length=150)
+    country = models.CharField(blank=True, null=True, max_length=150)
+    address = models.CharField(blank=True, null=True, max_length=150)
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.title
+
+
+class categoryType(models.Model):
+    categoryName = models.CharField(max_length=50)
+
+    def upload_photo_dir(self, filename):
+        path = './category/{}'.format(filename)
+        return path
+
+    image_url = models.ImageField(null=True, upload_to=upload_photo_dir)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.categoryName
+
+
+class upVoteStory(models.Model):
+    pinId = models.ForeignKey(
+        "pin", on_delete=models.CASCADE, null=True, related_name='updotes')
+    upVoter = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, related_name='user_upvoted_stories')
+    upvote = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['pinId', 'upVoter'], name="upvoter-pin")
+
+
+        ]
+
+
+class aboutUs(models.Model):
+    aboutDesc = models.TextField()
+
+
+class Faq(models.Model):
+    faqQuestionDesc = models.TextField()
+    faqAnswerDesc = models.TextField()
+
+
+class flagStory(models.Model):
+    pinId = models.ForeignKey(
+        "pin", on_delete=models.CASCADE, null=True,  related_name='flaggerstory')
+    flagger = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    flagged = models.BooleanField(default=True)
+    reportType = models.PositiveIntegerField(
+        default=4, validators=[MinValueValidator(0), MaxValueValidator(5)])
+    reason = models.TextField(null=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['pinId', 'flagger'], name="flagger-pin")
+        ]
+
+
+class commentStory(models.Model):
+    pin = models.ForeignKey(
+        "pin", on_delete=models.CASCADE, null=True,  related_name='commentstory')
+    is_anonymous_comment = models.BooleanField(default=False)
+    commenter = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    description = models.TextField()
+
+
+class FlagComment(models.Model):
+    comment = models.ForeignKey(
+        "commentStory", on_delete=models.CASCADE, null=True, related_name='flaggingComment')
+    flagger = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, related_name='flaggerComment')
+    flagged = models.BooleanField(default=False)
+    reportType = models.PositiveIntegerField(
+        default=1, validators=[MinValueValidator(0), MaxValueValidator(4)])
+    reason = models.TextField(null=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True, null=True)
+
+
+class photo(models.Model):
+
+    title = models.CharField(max_length=100)
+    uploader = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    # or upload_to="images", which would result in your images being at "http://127.0.0.1:8000/media/images/Capture1.PNG"
+  #  image_url = models.ImageField(upload_to="pins", null=True,)
+
+    def upload_photo_dir(self, filename):
+        path = './pins/{}'.format(datetime.today().strftime(
+            '%Y_%m_%d_%H_%M_%S_') + '_' + self.title + '_' + self.uploader.username + '.jpg')
+        return path
+    image_url = models.ImageField(null=True, upload_to=upload_photo_dir)
+
+    # def save(self, *args, **kwargs):
+    #     new_image = (self.image_url)
+    #     self.image_url = new_image
+    #     super().save(*args, **kwargs)
+
+    # def compress(image):
+    #     im = Image.open(image)
+    #     im = image.resize((x, y), Image.ANTIALIAS)  # LANCZOS as of Pillow 2.7
+    #     quality_val = 90
+    #     im.save(image, 'JPEG', quality=quality_val)
+    # create a BytesIO object
+    # im_io = BytesIO()
+    # save image to BytesIO object
+    # im.save(im_io, 'JPEG', quality=30)
+    # create a django-friendly Files object
+    #new_image = File(im_io, name=image.name)
+
+    # return new_image
+    # return im

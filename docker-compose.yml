@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+      - ./docker/postgres/defaultdb.sql:/docker-entrypoint-initdb.d/defaultdb.sql
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=doadmin
+      - POSTGRES_PASSWORD=postgres
+      - TZ=UTC
+      - PGTZ=UTC
+  django:
+    build: 
+      context: .
+      dockerfile: docker/django/Dockerfile 
+    command: python GlobalTraqs/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/code
+    ports:
+      - "8000:8000"
+    env_file:
+      - docker/django/.env 
+    depends_on:
+      - db 
+volumes:
+  dbdata:

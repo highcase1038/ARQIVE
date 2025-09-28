@@ -1,0 +1,1922 @@
+@import url("~react-leaflet-markercluster/dist/styles.min.css");
+@import url("~react-datepicker/dist/react-datepicker.css");
+@import url("https://unpkg.com/leaflet-geosearch@2.6.0/assets/css/leaflet.css");
+
+body {
+  /* Disables pull-to-refresh but allows overscroll glow effects. */
+  /* overscroll-behavior-y: contain; */
+  overflow: hidden;
+  overscroll-behavior-y: contain;
+  /* touch-action: none; */
+}
+html {
+  /* Disables pull-to-refresh but allows overscroll glow effects. */
+  /* overscroll-behavior-y: contain; */
+}
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.marker-cluster-small {
+  background-color: rgba(245, 220, 109, 0.6) !important;
+}
+
+.marker-cluster-small div {
+  background-color: rgba(245, 220, 109, 0.3) !important;
+}
+
+.marker-cluster-medium {
+  background-color: rgba(240, 160, 85, 0.6) !important;
+}
+
+.marker-cluster-medium div {
+  background-color: rgba(240, 160, 85, 0.3) !important;
+}
+
+.marker-cluster-large {
+  background-color: rgba(230, 63, 82, 0.6) !important;
+}
+
+.marker-cluster-large div {
+  background-color: rgba(230, 63, 82, 0.3) !important;
+}
+
+.top-bar {
+  padding: 18px 0px 10px 30px;
+  background-color: black;
+  min-height: 85px;
+  width: 100%;
+}
+
+.top-bar a {
+  text-decoration: none;
+  color: white;
+  padding-right: 40px;
+}
+
+.navigation-links {
+  float: right;
+  font-size: 25px;
+  padding-top: 4px;
+}
+
+.top-bar a:hover {
+  color: gray;
+  text-decoration: none;
+}
+
+.leaflet-container {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+/* .add-story-button {
+    position: absolute;
+    z-index: 1000;
+    float: right;
+    right: 20px;
+    top: 20px;
+} */
+
+/*.map {*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*}*/
+
+/*#world-map {*/
+/*    position: absolute;*/
+/*}*/
+
+#world-map {
+  width: 100%;
+  height: 100%;
+}
+
+.MuiDrawer-paper {
+  /*margin-top: 90px;*/
+  width: 40%;
+}
+
+.search-sidebar {
+  width: 40%;
+}
+
+.story-sidebar {
+  background-color: white;
+  width: 40%;
+  padding: 20px;
+  overscroll-behavior-y: contain;
+}
+
+#map-dashboard {
+  width: 100%;
+  position: fixed;
+  margin-top: 129px;
+  height: calc(100% - 129px);
+  height: -webkit-calc(100% - 129px);
+  height: -moz-calc(100% - 129px);
+}
+
+.main-content-div {
+  margin-top: 129px;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}
+
+#sidebar-style {
+  position: absolute;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+  top: 0;
+}
+
+#sidebar2-style {
+  position: absolute;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+  top: 0;
+}
+
+#open-sidebar-button {
+  z-index: 998;
+  position: absolute;
+  right: 0px;
+}
+
+/* fix for bold Tiny MCE text not showing up in some pages */
+b,
+strong {
+  font-weight: bold !important;
+  /* make this styling take precedence over bootstrap 'bolder' style */
+}
+
+.userway {
+  visibility: hidden;
+}
+
+.header-nav {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  text-transform: lowercase !important;
+}
+
+#story-page {
+  position: absolute;
+  transition: all 0.75s ease-out;
+  background: white;
+  height: auto;
+  min-height: 100%;
+  width: 100%;
+  z-index: 2;
+  margin-top: 70px;
+}
+
+#story-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.aboutHeader {
+  padding-bottom: 10px;
+  float: left;
+  font-size: 1rem;
+  color: #ffffff;
+  font-family: "Eina", "Arial" !important;
+  text-transform: lowercase;
+}
+
+.aboutDesc {
+  margin-top: 40px;
+  float: right;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.columnleft {
+  width: 60%;
+  position: relative;
+  float: left;
+  width: 50%;
+  top: 120px;
+
+  background: rgb(77, 65, 133);
+}
+
+.columnright {
+  width: 40%;
+  position: relative;
+  float: right;
+  width: 50%;
+  top: 120px;
+  background: rgb(77, 65, 133);
+}
+
+.column {
+  position: relative;
+  float: left;
+  width: 50%;
+  top: 120px;
+  margin-left: -10px;
+  margin-right: -10px;
+  background: rgb(77, 65, 133);
+}
+
+/* Clear floats after the columns */
+.aboutUs-row {
+  background: rgb(77, 65, 133);
+  height: auto !important;
+  min-height: 100% !important;
+  width: 100%;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+
+.favorite-stories {
+  min-height: 100%;
+  height: auto;
+  background: rgb(77, 65, 133);
+  padding-top: 60px !important;
+  color: white !important;
+  padding-bottom: 60px !important;
+}
+
+.user-profile-name {
+  font-family: "Eina", "Arial" !important;
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+  color: black !important;
+  text-transform: none !important;
+}
+
+.default-btn-purple {
+  border-radius: 8px !important;
+  background: rgb(77, 65, 133) !important;
+  color: white !important;
+  font-family: "Eina", "Arial" !important;
+  text-transform: lowercase !important;
+}
+
+.site-header {
+  background-color: black !important;
+  padding-right: 0px !important;
+}
+
+.header-nav-link {
+  color: white !important;
+  font-family: Eina, Arial;
+  font-size: 12px !important;
+  text-transform: lowercase !important;
+  text-align: center;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-nav-link:hover {
+  color: white !important;
+}
+
+.navbar-toggler {
+  margin-right: 30px;
+}
+
+.header-nav-username {
+  color: #f0a055 !important;
+  font-weight: 600;
+  font-size: 1rem !important;
+  text-transform: lowercase !important;
+}
+
+.anonymous-nav-item {
+  margin: auto;
+}
+
+.header-nav-anonymous {
+  color: white !important;
+  text-transform: lowercase !important;
+  font-family: Eina, Arial;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.header-nav-anonymous-active {
+  color: #00ce7d !important;
+  font-family: Eina, Arial;
+  font-size: 1rem;
+  text-transform: lowercase !important;
+  font-weight: 600;
+}
+
+.header-nav-anonymous-not-active {
+  color: #e63f52 !important;
+  font-family: Eina, Arial;
+  font-size: 1rem;
+  text-transform: lowercase !important;
+  font-weight: 600;
+}
+
+.MuiSlider-colorPrimary {
+  color: rgb(77, 65, 133) !important;
+}
+
+.faq-page-background {
+  background: #f5dc6d !important;
+  min-height: 100%;
+  height: auto;
+  width: 100%;
+  padding-top: 80px !important;
+}
+
+.faq-card {
+  border-radius: 25px !important;
+  box-shadow: -5px 5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.faq-question {
+  font-family: Eina, Arial;
+  /* color: #98999b !important; */
+  text-transform: lowercase !important;
+  font-weight: 600;
+  font-size: 1.7rem;
+  letter-spacing: -0.5px;
+}
+
+.faq-answer {
+  font-size: 1.1rem;
+}
+
+.add-faq-button {
+  float: right;
+  border-radius: 8px !important;
+  text-transform: lowercase !important;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+  background-color: transparent;
+  color: #f5dc6d;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+  padding: 0 18px;
+  background-color: transparent;
+  display: none;
+  overflow: hidden;
+}
+
+.header-user-dropdown-menu {
+  background-color: black !important;
+  width: 100%;
+  border-radius: 8px;
+  /* margin-left: 5px; */
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+  /* transform: translate3d(1px, 48px, 0px) !important; */
+}
+
+.header-user-dropdown-button {
+  background-color: black !important;
+  width: 100%;
+  margin-right: 0;
+  border-color: black !important;
+  padding-right: 100px !important;
+  font-family: "Eina", "Arial" !important;
+}
+
+.dropdown-nav {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
+
+.dropdown-item:hover {
+  background-color: black !important;
+}
+
+.header-dropdown-nav-item {
+  color: #98999b !important;
+  text-transform: lowercase !important;
+  font-family: Eina, Arial;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+.header-dropdown-nav-item:hover {
+  color: #98999b !important;
+}
+
+.header-dropdown {
+  margin-right: 0 !important;
+}
+
+button {
+  outline: 0 !important;
+}
+
+*:focus {
+  outline: 0 !important;
+}
+
+.contact-us-nav-link:hover {
+  color: #248dc1 !important;
+}
+
+.contact-us-nav-link:focus {
+  color: #248dc1 !important;
+}
+
+.contact-us-div {
+  background-color: #248dc1 !important;
+  padding-top: 3% !important;
+}
+
+.contact-us-card {
+  border-radius: 25px !important;
+  box-shadow: -5px 5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.contact-us-title {
+  font-family: Eina, Arial;
+  color: #98999b !important;
+  text-transform: lowercase !important;
+  font-weight: 600;
+  font-size: 1.7rem;
+  letter-spacing: -0.5px;
+}
+
+.contact-us-text {
+  font-family: "Courier New", "Courier" !important;
+  text-transform: lowercase !important;
+  font-weight: 600 !important;
+  color: #98999b !important;
+  font-size: 1rem;
+}
+
+.contact-us-btn {
+  background-color: black !important;
+  border-radius: 15px !important;
+  text-transform: lowercase !important;
+  color: white !important;
+  font-size: 1rem !important;
+  width: 120px !important;
+}
+
+.contact-us-btn-div {
+  text-align: center;
+}
+
+.terms-of-service-full-page {
+  height: auto !important;
+  min-height: 100% !important;
+  width: 100%;
+  margin-right: 0px !important;
+  margin-top: 100px;
+  margin-left: 250px !important;
+  color: black;
+}
+
+.contactUs-header-active {
+  color: #248dc1 !important;
+}
+
+.credits-header-active {
+  color: #ef9f54 !important;
+}
+
+.credits-nav-link:hover {
+  color: #ef9f54 !important;
+}
+
+.credits-nav-link:focus {
+  color: #ef9f54 !important;
+}
+
+.support-us-header-active {
+  color: #e01783 !important;
+}
+
+.support-us-nav-link:hover {
+  color: #e01783 !important;
+}
+
+.support-us-nav-link:focus {
+  color: #e01783 !important;
+}
+
+.support-us-div {
+  padding: 0 !important;
+}
+
+.support-us-main-content-col {
+  background-color: #e01783 !important;
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+}
+
+.support-us-main-content-div {
+  margin-top: 10% !important;
+  width: 60%;
+  height: 60%;
+  margin-right: 20%;
+  margin-left: 20%;
+}
+
+.support-us-title {
+  text-transform: lowercase !important;
+  color: white !important;
+  font-family: "Eina", "Arial" !important;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.support-us-image-div {
+  position: relative;
+  height: auto;
+  width: 100%;
+}
+
+.text-block-1 {
+  position: absolute;
+  top: 42%;
+  text-align: center;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  color: white;
+}
+
+.support-us-images {
+  width: 100%;
+  height: auto;
+}
+
+.support-us-image-main-text {
+  color: white;
+  font-family: "Eina", "Arial";
+  text-transform: lowercase;
+  font-weight: 600;
+}
+
+.support-us-image-sub-text {
+  font-size: 1.05rem;
+  margin-top: -10px;
+  font-weight: 500;
+  margin-bottom: 1em;
+}
+
+.support-us-main-content-text {
+  color: white;
+  font-size: 1rem;
+}
+
+.support-us-side-content-col {
+  margin-top: 7.2% !important;
+  height: 60%;
+  padding-bottom: 50px;
+}
+
+.support-us-side-title {
+  color: #e01783 !important;
+  font-size: 2.5rem;
+  font-family: "Eina", "Arial";
+  font-weight: 700;
+  text-transform: lowercase;
+}
+
+.support-us-side-content-div {
+  text-align: center;
+}
+
+.social-media-images {
+  width: 40px;
+  height: 40px;
+  margin-top: 40px;
+  margin-right: 40px;
+}
+
+.faq-header-active {
+  color: #f5dc6d !important;
+}
+
+.faq-header-nav-link:hover,
+.faq-header-nav-link:focus {
+  color: #f5dc6d !important;
+}
+
+.about-us-header-active {
+  color: rgb(77, 65, 133) !important;
+}
+
+.about-us-header-nav-link:hover,
+.aabout-us-header-nav-link:focus {
+  color: rgb(77, 65, 133) !important;
+}
+
+.resources-header-active {
+  color: #00ce7d !important;
+}
+
+.resources-nav-link:hover,
+.resources-nav-link:focus {
+  color: #00ce7d !important;
+}
+
+.resources-main-div {
+  background-color: #00ce7d !important;
+  height: auto;
+  min-height: 100%;
+  width: 100%;
+  padding: 15px !important;
+}
+
+.resources-main-content-div {
+  margin-top: 5% !important;
+  width: 100%;
+  height: 60%;
+  margin-left: 20%;
+}
+
+.resource-title {
+  text-transform: none !important;
+  font-family: Eina, Arial;
+  color: black !important;
+  font-weight: 600;
+  font-size: 1.7rem;
+  letter-spacing: -0.5px;
+  margin: 0 !important;
+}
+
+.resource-text {
+  font-family: Eina, Arial !important;
+  font-weight: 500 !important;
+  color: black !important;
+  font-size: 1.1rem;
+  margin: 0 !important;
+}
+
+.resource-contact-text {
+  font-family: "Courier New", "Courier" !important;
+  font-weight: 600 !important;
+  color: black !important;
+  font-size: 1rem;
+  margin: 0 !important;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.resources-card {
+  border-radius: 25px !important;
+  box-shadow: -5px 5px rgba(0, 0, 0, 0.1) !important;
+  margin-top: 1rem !important;
+}
+
+.resources-sub-content-div {
+  width: 100%;
+  height: 100%;
+}
+
+.text-underline {
+  text-decoration: underline !important;
+}
+
+.resources-title {
+  text-transform: lowercase !important;
+  color: white !important;
+  font-family: "Eina", "Arial" !important;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.resources-sub-text {
+  color: white;
+  font-family: Eina, Arial !important;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.search-bar-story-card-trim-personal {
+  height: 1rem;
+  background-color: #e01783 !important;
+  width: 100%;
+}
+
+.search-bar-story-card-trim-resources {
+  height: 1rem;
+  background-color: #00ce7d !important;
+  width: 100%;
+}
+
+.search-bar-story-card-trim-historical {
+  height: 1rem;
+  background-color: #248dc1 !important;
+  width: 100%;
+}
+
+.sidebar-input-placeholder {
+  font-family: "Eina", "Arial" !important;
+  padding-left: 10px !important;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #d5d5d5;
+}
+
+.sidebar-story-anon-username {
+  font-family: "Courier New", "Courier" !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  color: #98999b !important;
+  text-transform: none !important;
+}
+
+.sidebar-story-title {
+  font-family: "Eina", "Arial" !important;
+  line-height: 1.75rem !important;
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  cursor: pointer;
+  text-transform: none !important;
+  white-space: break-spaces;
+}
+
+.sidebar-story-date {
+  font-size: x-small !important;
+  font-family: "Courier New", "Courier" !important;
+  font-weight: 500 !important;
+  color: rgb(77, 65, 133) !important;
+  text-transform: lowercase !important;
+}
+
+.sidebar-story-description {
+  font-size: 0.875rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  color: rgba(0, 0, 0, 0.65);
+
+  /* Interweave Markup styling  */
+  span p img {
+    width: 100% !important;
+    height: auto !important;
+  }
+  span p a {
+    color: #4d4185;
+    text-decoration: underline;
+  }
+  /* END Interweave Markup styling  */
+}
+
+.sidebar-story-read-more {
+  text-align: end;
+  font-size: 0.8rem !important;
+  font-family: "Courier New", "Courier" !important;
+  font-weight: 600 !important;
+  color: rgb(77, 65, 133) !important;
+  text-transform: lowercase !important;
+  text-decoration-line: underline !important;
+  line-height: 1px;
+}
+
+.sidebar-story-author {
+  font-family: "Courier New", "Courier" !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  color: black !important;
+  text-transform: none !important;
+}
+
+.sidebar-story-username {
+  font-family: "Courier New", "Courier" !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  color: rgb(77, 65, 133) !important;
+  text-transform: none !important;
+}
+
+.sidebar-story-username a {
+  font-weight: 600 !important;
+  font-family: "Courier New", "Courier" !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  color: rgb(77, 65, 133) !important;
+  text-transform: none !important;
+}
+
+.sidebar-text {
+  font-family: "Eina", "Arial" !important;
+  font-size: 1.05rem !important;
+  font-weight: 400 !important;
+  color: #818181 !important;
+  text-transform: lowercase !important;
+}
+
+.sidebar-text .nav-tabs {
+  margin-left: 0px !important;
+  padding-left: 0px !important;
+}
+
+.nav-tabs .nav-link {
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+  text-align: left;
+  padding-bottom: 0.25rem;
+  margin-right: 0px;
+  padding-left: 0px;
+}
+
+.nav-tabs {
+  border-bottom: none !important;
+  background-color: #f5f2ff !important;
+}
+
+.nav-tabs .nav-link.active {
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  text-decoration: underline !important;
+  text-decoration-line: underline;
+  text-underline-offset: 0.4rem;
+  text-decoration-thickness: 1.5px !important;
+  background-color: #f5f2ff !important;
+}
+
+.react-date-picker {
+  font-weight: 200;
+}
+
+.react-date-picker__button svg {
+  stroke-width: 1.5px !important;
+  stroke: #5a5a5a;
+}
+
+.react-date-picker__wrapper {
+  background-color: #fff;
+  font-weight: 100 !important;
+  border-radius: 5px;
+  color: #818181;
+}
+
+.react-calendar {
+  border-radius: 8px;
+}
+
+.search-bar-btn-group1 {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}
+
+.search-bar-btn-group {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.search-bar-btn {
+  padding: 0.35rem 1rem 0.35rem 1rem !important;
+  font-size: 0.85rem;
+  border-radius: 8px !important;
+  background: rgb(77, 65, 133) !important;
+  color: white !important;
+  font-family: "Eina", "Arial" !important;
+  font-weight: 800;
+  text-transform: lowercase !important;
+  border: 0 !important;
+}
+
+.add-story-button {
+  margin-bottom: 10px;
+  right: 0px;
+  background-color: #463e7c !important;
+  border-radius: 50% !important;
+  padding: 1rem 1rem !important;
+}
+
+.add-story-button > svg {
+  text-align: center;
+  width: 2rem;
+  height: 2rem;
+}
+
+.near-me-button {
+  border-radius: 50% !important;
+  padding: 0.25rem 0.25rem !important;
+  font-size: 2rem !important;
+}
+
+.story-page-story-title {
+  font-family: "Eina", "Arial" !important;
+  font-size: 2rem !important;
+  font-weight: 500 !important;
+  color: black !important;
+  text-transform: none !important;
+}
+
+.story-page-story-address {
+  font-family: "Courier" !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: black !important;
+  text-transform: lowercase !important;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.story-page-dates {
+  font-family: "Courier" !important;
+  font-size: 1rem !important;
+  letter-spacing: 0px;
+  /* font-weight: 600 !important; */
+  color: rgb(77, 65, 133) !important;
+  text-transform: lowercase !important;
+  /* line-height: 1px; */
+}
+
+.anticon-user {
+  margin-top: 20px;
+}
+
+.story-page-favorites {
+  font-family: "Courier New", "Courier" !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: black !important;
+  text-transform: lowercase !important;
+}
+
+.story-page-favorite-count {
+  font-family: "Courier New", "Courier" !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: rgb(77, 65, 133) !important;
+  text-transform: lowercase !important;
+}
+
+.login-link {
+  color: #e01783 !important;
+  font-family: "Courier New", "Courier" !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  text-transform: lowercase !important;
+}
+
+.flag-story-btn {
+  border-radius: 8px !important;
+  background: #f0a055 !important;
+  color: white;
+  font-family: "Eina", "Arial" !important;
+  text-transform: lowercase !important;
+  float: right;
+}
+
+.story-comment-card {
+  border: none !important;
+  border-radius: 25px !important;
+  box-shadow: -5px 5px rgba(0, 0, 0, 0.1) !important;
+  margin-top: 20px;
+  width: 100% !important;
+}
+
+.story-card-description {
+  font-family: "Eina", "Arial" !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: rgb(77, 65, 133) !important;
+  text-transform: lowercase !important;
+}
+
+.user-profile-main-content {
+  padding-top: 50px;
+}
+
+.user-profile-bio {
+  font-family: "Eina", "Arial" !important;
+  font-size: 1rem;
+  color: black !important;
+  text-transform: none !important;
+}
+
+.user-profile-body {
+  margin: 50px 1.5rem 1rem 1.5rem;
+}
+
+.profile-story-card {
+  min-height: 100%;
+  height: auto;
+}
+
+.profile-page-edit-story {
+  background-color: transparent !important;
+  font-family: "Courier New", "Courier" !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: rgb(77, 65, 133) !important;
+  text-transform: lowercase !important;
+  padding: 0 !important;
+  margin-top: 10px;
+}
+
+.profile-story-card {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 20px !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.profile-page-story-settings-card {
+  color: white;
+  font-family: "Eina", "Arial" !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  background-color: rgb(77, 65, 133) !important;
+  text-transform: lowercase !important;
+  border-radius: 20px;
+  height: 100%;
+  width: 80%;
+  text-align: center;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.profile-page-story-settings-card-body {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.user-profile-my-posts-title {
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 2rem;
+  margin-bottom: 40px;
+  font-family: "Eina", "Arial" !important;
+  letter-spacing: 1px;
+  color: black !important;
+  text-transform: none !important;
+}
+
+.register-div {
+  background-color: rgb(77, 65, 133) !important;
+  padding-top: 3% !important;
+}
+
+.register-card {
+  border-radius: 25px !important;
+  box-shadow: -5px 5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.register-title {
+  font-family: Eina, Arial;
+  color: #98999b !important;
+  text-transform: lowercase !important;
+  font-weight: 600;
+  font-size: 1.7rem;
+  letter-spacing: -0.5px;
+}
+
+.register-text {
+  font-family: "Courier New", "Courier" !important;
+  text-transform: lowercase !important;
+  font-weight: 600 !important;
+  color: #98999b !important;
+  font-size: 1rem;
+}
+
+.register-btn {
+  background-color: #000 !important;
+  border-radius: 15px !important;
+  text-transform: lowercase !important;
+  color: #fff !important;
+  font-size: 1rem !important;
+  width: auto !important;
+}
+
+.login-div {
+  background-color: rgb(77, 65, 133) !important;
+  padding-top: 3% !important;
+}
+
+.login-card {
+  border-radius: 25px !important;
+  box-shadow: -5px 5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.login-title {
+  font-family: Eina, Arial;
+  color: #98999b !important;
+  text-transform: lowercase !important;
+  font-weight: 600;
+  font-size: 1.7rem;
+  letter-spacing: -0.5px;
+}
+
+.login-text {
+  font-family: "Courier New", "Courier" !important;
+  text-transform: lowercase !important;
+  font-weight: 600 !important;
+  color: #98999b !important;
+  font-size: 1rem;
+}
+
+.login-btn {
+  background-color: black !important;
+  border-radius: 15px !important;
+  text-transform: lowercase !important;
+  color: white !important;
+  font-size: 1rem !important;
+  width: 120px !important;
+}
+
+.accounts-form-group {
+  padding: 30px 30px !important;
+}
+
+.forgot-password-div {
+  background-color: rgb(77, 65, 133) !important;
+  padding-top: 3% !important;
+}
+
+.forgot-password-card {
+  border-radius: 25px !important;
+  box-shadow: -5px 5px rgba(0, 0, 0, 0.1) !important;
+}
+
+.forgot-password-title {
+  font-family: Eina, Arial;
+  color: #98999b !important;
+  text-transform: lowercase !important;
+  font-weight: 600;
+  font-size: 1.7rem;
+  letter-spacing: -0.5px;
+}
+
+.forgot-password-text {
+  font-family: "Courier New", "Courier" !important;
+  text-transform: lowercase !important;
+  font-weight: 600 !important;
+  color: #98999b !important;
+  font-size: 1rem;
+}
+
+.forgot-password-btn {
+  background-color: black !important;
+  border-radius: 15px !important;
+  text-transform: lowercase !important;
+  color: white !important;
+  font-size: 1rem !important;
+  width: 150px !important;
+}
+
+.login-register-links a {
+  color: rgb(77, 65, 133) !important;
+  font-weight: 600 !important;
+}
+
+.react-switch {
+  margin-top: 7px;
+}
+
+.story-card {
+  border-radius: 10px !important;
+  padding: 0rem 1.25rem 0.25rem 0.25rem;
+}
+
+.profile-page-favorite-posts-title {
+  text-align: center;
+  font-family: "Eina", "Arial" !important;
+  color: white;
+  text-transform: lowercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+.moveimage {
+  padding-right: 10px;
+  width: 100%;
+}
+
+.con {
+  background: rgb(77, 65, 133);
+}
+
+.threeButton1 {
+  padding-right: 100px;
+  text-align: center;
+  width: 80%;
+  border-color: #f0dc7d;
+  border-style: solid;
+  border-radius: 40px 40px 40px 40px;
+}
+
+.threeButton2 {
+  text-align: center;
+  width: 80%;
+  border-color: #cd3582;
+  border-style: solid;
+
+  border-radius: 40px 40px 40px 40px;
+}
+
+.threeButton3 {
+  text-align: center;
+  width: 80%;
+  border-color: #448cbc;
+  border-style: solid;
+  border-radius: 40px 40px 40px 40px;
+}
+
+.aboutHeader {
+  float: left;
+  font-size: 2.5rem;
+  color: #ffffff;
+  font-family: Eina, Arial !important;
+}
+
+.aboutDesc {
+  float: right;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.columnleft {
+  width: 60%;
+  position: relative;
+  float: left;
+  width: 50%;
+  top: 120px;
+
+  background: rgb(77, 65, 133);
+}
+
+.columnright {
+  width: 40%;
+  position: relative;
+  float: right;
+  width: 50%;
+  top: 120px;
+  background: rgb(77, 65, 133);
+}
+
+.column {
+  position: relative;
+  float: left;
+  width: 50%;
+  top: 120px;
+  margin-left: -10px;
+  margin-right: -10px;
+  background: rgb(77, 65, 133);
+}
+
+/* Clear floats after the columns */
+.aboutUs-row {
+  background: rgb(77, 65, 133);
+  height: 100%;
+}
+
+.credits-page {
+  background: #ef9f54;
+  height: auto;
+}
+
+.favorite-stories {
+  min-height: 100%;
+  height: auto;
+  background: rgb(77, 65, 133);
+  padding-top: 60px !important;
+  color: white !important;
+}
+
+.user-profile-name {
+  color: rgb(77, 65, 133);
+}
+
+.default-btn-purple {
+  border-radius: 8px !important;
+  background: rgb(77, 65, 133) !important;
+  color: white;
+}
+
+.user-profile-favorite-posts-div {
+  margin-top: "25px";
+  width: 90%;
+  margin-top: 25px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.user-profile-story-title {
+  font-family: "Eina", "Arial" !important;
+  /* font-size: 1.75rem !important; */
+  font-weight: 800 !important;
+  letter-spacing: normal;
+  color: rgb(0, 0, 0) !important;
+  text-transform: none !important;
+  white-space: break-spaces;
+}
+.user-profile-story-description {
+  font-family: "Eina", "Arial" !important;
+  font-size: 1.1rem !important;
+  color: black !important;
+  text-transform: none !important;
+}
+
+.user-profile-favorite-bookmark-icon {
+  height: 40px;
+  float: right;
+  width: 40px;
+}
+
+.btn-no-style {
+  background-color: transparent;
+  border: none;
+  float: right;
+}
+
+.edit-profile-pic-button {
+  width: 40px;
+  height: 40px;
+  background: rgb(77, 65, 133) !important;
+  color: white;
+  border-radius: 50px;
+  position: absolute;
+  right: 15px;
+  top: 95px;
+  border: none;
+}
+
+.profile-image-div {
+  width: 150px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.profile-settings-div {
+  background: rgb(77, 65, 133) !important;
+  min-height: 100%;
+  height: auto;
+  width: 100%;
+}
+
+.profile-settings-div span {
+  position: relative;
+  left: 20px;
+  top: -14px;
+  color: white;
+  font-family: "Eina", "Arial" !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.profile-settings-div label {
+  color: white !important;
+  font-family: "Eina", "Arial" !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  text-transform: lowercase !important;
+}
+
+.profile-settings-div h1 {
+  color: white;
+  font-family: "Eina", "Arial" !important;
+  font-size: 2rem;
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: 1px;
+}
+
+.profile-settings-div col {
+  padding-top: 50px;
+}
+
+.profile-settings-bio-form {
+  width: 100% !important;
+  height: 150px !important;
+}
+
+.btn-delete-profile {
+  color: white !important;
+  font-family: "Courier New", "Courier" !important;
+  font-weight: 600 !important;
+  text-transform: lowercase !important;
+  background-color: transparent !important;
+  border: none !important;
+  font-size: 1rem !important;
+}
+
+.profile-settings-cancel-btn {
+  background-color: transparent;
+  border-radius: 20px;
+  width: 200px;
+  height: 50px;
+  color: white;
+  font-family: "Eina", "Arial";
+  text-transform: lowercase;
+  border: 1px solid white;
+  font-weight: 600;
+}
+
+.profile-settings-submit-btn {
+  background-color: white;
+  border-radius: 20px;
+  width: 200px;
+  height: 50px;
+  color: rgb(77, 65, 133) !important;
+  font-family: "Eina", "Arial";
+  text-transform: lowercase;
+  border: 1px solid rgb(77, 65, 133) !important;
+  font-weight: 600;
+}
+
+.copyright {
+  padding-right: 10px;
+  padding-top: 30px;
+  width: 100%;
+  font-size: 0.75rem;
+  color: white;
+}
+
+.faq-plus-btn {
+  width: 20px;
+  height: 20px;
+}
+
+.faq-minus-btn {
+  width: 15px;
+  margin-right: 5px;
+  height: 20px;
+}
+
+.faq-title-div {
+  display: flex;
+  align-items: center;
+  padding-right: 70px;
+}
+
+.sidebar-story-div {
+  padding: 80px 10px;
+  position: relative;
+  height: auto;
+  min-height: 100%;
+}
+
+.story-comment-header {
+  font-family: "Eina", "Arial" !important;
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  color: black !important;
+  text-transform: lowercase !important;
+}
+
+.story-comment-text {
+  font-family: "Eina", "Arial" !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  color: black !important;
+  text-transform: none !important;
+}
+
+.down-icon-col {
+  left: 20px;
+  position: absolute !important;
+  top: 55px;
+}
+
+.fixed-down-icon-col {
+  left: 20px;
+  position: fixed !important;
+  top: 155px;
+}
+
+.down-arrow-row a {
+  color: rgb(77, 65, 133) !important;
+}
+
+.favorite-story-btn {
+  background-color: transparent;
+  border: none;
+}
+
+.story-favorites-icon {
+  height: 40px;
+  width: 40px;
+}
+
+.modal-content {
+  border-radius: 24px;
+  padding: 20px;
+}
+
+.modal-title {
+  font-family: "Eina", "Arial" !important;
+  text-transform: lowercase !important;
+  letter-spacing: 1px !important;
+  font-size: 1.5rem !important;
+}
+
+.model-body-text {
+  font-family: "Eina", "Arial" !important;
+  text-transform: lowercase !important;
+}
+
+label {
+  font-family: Eina, Arial !important;
+  text-transform: lowercase !important;
+  color: black !important;
+  font-size: 1.2em !important;
+}
+
+select {
+  font-family: Eina, Arial !important;
+  text-transform: lowercase !important;
+  color: black !important;
+  font-size: 1em !important;
+}
+
+.react-date-picker {
+  font-family: Eina, Arial !important;
+  color: black !important;
+}
+
+.story-form-alerts {
+  text-transform: lowercase !important;
+  font-family: "Courier New", "Courier" !important;
+  font-weight: 600;
+  color: #e63f52 !important;
+}
+
+.btn:focus {
+  box-shadow: none !important;
+}
+
+.resources-sub-text span,
+.resources-sub-text a {
+  color: white;
+  font-family: Eina, Arial !important;
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.resources-sub-text span:hover,
+.resources-sub-text a:hover {
+  color: white !important;
+  font-family: Eina, Arial !important;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+input {
+  font-family: Eina, Arial !important;
+}
+
+textarea {
+  font-family: Eina, Arial !important;
+}
+
+#tinymce {
+  font-family: Eina, Arial !important;
+}
+
+.navbar {
+  height: 130px !important;
+}
+
+.profile-page-story-row {
+  padding-top: 25px;
+  padding-bottom: 1rem;
+}
+
+.left-text {
+  text-align: left !important;
+}
+
+.sidebarCloseIcon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  transition: transform 0.5s ease-in;
+  display: none;
+}
+
+.map-container {
+  position: absolute;
+  height: 100%;
+  width: 60%;
+  transition: all 0.75s ease-out;
+}
+
+.MuiDrawer-paper {
+  width: 40% !important;
+}
+@media screen and (max-width: 900px) {
+  .profile-page-story-settings-card {
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .left-text {
+    text-align: center !important;
+  }
+  .map-container {
+    width: 50%;
+  }
+
+  .search-sidebar {
+    width: 50%;
+  }
+  .sidebarCloseIcon {
+    display: none;
+  }
+  .story-sidebar {
+    width: 50%;
+    overscroll-behavior-y: contain;
+  }
+  .MuiDrawer-paper {
+    width: 50% !important;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .leaflet-control-geosearch.bar {
+    width: 150px !important;
+  }
+  .map-container {
+    width: 100%;
+  }
+
+  .search-sidebar {
+    width: 100%;
+  }
+
+  .story-sidebar {
+    width: 100%;
+    overscroll-behavior-y: contain;
+  }
+
+  .sidebarCloseIcon {
+    display: block;
+  }
+  .add-story-button {
+    display: none;
+  }
+  .support-us-main-content-div {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100%;
+  }
+
+  .support-us-image-main-text {
+    font-size: 2rem;
+  }
+
+  .support-us-image-sub-text {
+    font-size: 1.5rem;
+  }
+  .MuiDrawer-paper {
+    width: 100% !important;
+  }
+}
+
+.not-found-background {
+  background-color: #e63f52 !important;
+  height: 100%;
+  width: 100%;
+  padding-top: 80px;
+}
+
+.not-found-background h3 {
+  font-family: Eina, Arial !important;
+  text-transform: lowercase !important;
+  font-size: 2.2em !important;
+  color: white;
+}
+
+.not-found-background p {
+  text-align: left;
+  font-size: 1.5em !important;
+  color: white;
+  text-transform: lowercase;
+  font-family: "Courier New", "Courier" !important;
+}
+
+.not-found-background button {
+  border-radius: 8px;
+  color: white;
+  text-transform: lowercase;
+  font-family: Eina, Arial !important;
+  float: right;
+}
+
+.MuiCardContent-root {
+  padding: 20px 20px 20px 20px;
+}
+
+.management-div {
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  padding: 50px;
+}
+
+.nav-tab {
+  color: rgb(77, 65, 133) !important;
+  text-align: left;
+  font-size: 1.1em !important;
+  text-transform: lowercase;
+  font-weight: 600;
+  font-family: "Courier New", "Courier" !important;
+  border-bottom: 1px solid rgb(77, 65, 133) !important;
+}
+
+.nav-tab:hover {
+  color: rgb(77, 65, 133) !important;
+  text-align: left;
+  font-size: 1.1em !important;
+  text-transform: lowercase;
+  font-weight: 700 !important;
+  background-color: transparent;
+  border-bottom: 1px solid rgb(77, 65, 133) !important;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  background-color: transparent;
+}
+
+.nav-tab.active {
+  background-color: rgb(77, 65, 133) !important;
+  border-radius: 8px;
+  font-weight: 600;
+  border-color: white;
+}
+
+.manage-container {
+  padding: 25px;
+  color: black;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.manage-table {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  font-family: "Eina", "Arial" !important;
+  color: black !important;
+  font-size: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 500;
+  width: auto;
+}
+
+.manage-table-head,
+.manage-table-head th {
+  font-family: "Courier New", "Courier" !important;
+  color: rgb(77, 65, 133) !important;
+  font-size: 1rem;
+  text-transform: lowercase !important;
+  border: none !important;
+}
+
+.manage-reports {
+  font-family: "Eina", "Arial" !important;
+  color: black !important;
+  font-size: 0.8rem;
+  width: 100%;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.manage-paginate-buttons {
+  float: right;
+  margin-right: 50px;
+}
+
+.manage-paginate-buttons button {
+  margin-right: 10px;
+}
+
+.flag-limit-input {
+  width: 100px !important;
+  display: inline !important;
+  margin-left: 20px;
+}
+
+.flag-num-label {
+  font-family: "Courier New", "Courier" !important;
+  color: black !important;
+  font-size: 1rem;
+  text-transform: lowercase !important;
+}
+
+.flag-input-div {
+  margin-top: 50px;
+}
+
+.manage-card {
+  margin-top: 40px;
+  border-radius: 25px;
+}
+
+.text-danger {
+  font-family: "Courier New", "Courier" !important;
+  color: #e63f52 !important;
+  text-transform: lowercase !important;
+  font-weight: 600;
+}
+
+.navbar-brand {
+  margin-right: 20px !important;
+}
+
+.credits-class-year {
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  margin: 6px;
+  background-color: black;
+}
+
+/* START TinyMCE styling */
+.tox .tox-edit-area__iframe {
+  background-color: #fff !important;
+}
+
+.img-responsive {
+  height: auto;
+  width: 100%;
+}
+
+.tox-tinymce {
+  border: 1px solid #d5d5d5 !important;
+  border-radius: 5px !important;
+}
+/* END TinyMCE styling */
+
+.background-purp {
+  background-color: #f5f2ff !important;
+}
+
+.custom-form-text {
+  font-family: "Eina", "Arial" !important;
+  font-weight: 600 !important;
+  color: #575757 !important;
+}
+
+#category-selector {
+  .custom-selector {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 0px 0.5rem 0px 0.5rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    line-height: 1.75rem;
+    background-color: transparent;
+    transition: background-color ease-in 0.25s;
+    color: inherit;
+    cursor: pointer;
+  }
+}
+
+.check-address-btn {
+  padding: 0.35rem !important;
+  border-radius: 8px !important;
+  background: rgb(77, 65, 133) !important;
+  color: white !important;
+  font-family: "Eina", "Arial" !important;
+  font-weight: 800;
+  text-transform: lowercase !important;
+  border: 0 !important;
+}

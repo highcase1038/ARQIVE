@@ -1,0 +1,15 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow:/
+Allow:/story
+Allow: /story/*
+Allow: /About
+Allow: /faq
+Allow: /resources
+Allow: /users
+Allow: /users/*
+Disallow: /ContactUs
+Disallow: /login
+Disallow: /register
+Disallow: /manage
+Disallow: /manage/*

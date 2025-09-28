@@ -1,0 +1,85 @@
+.MuiSwitch-colorSecondary.Mui-checked {
+  color: #00ce7d !important;
+}
+.MuiSwitch-colorSecondary {
+  color: #e63f52 !important;
+}
+.MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
+  background-color: #00ce7d !important;
+}
+.MuiSwitch-track {
+  background-color: #e63f52 !important;
+}
+@media screen and (max-width: 992px) {
+  .navbar-collapse {
+    background-color: black;
+    padding: 30px;
+    margin-left: -16px;
+  }
+}
+@media (max-width: 993px) {
+  .navbar-expand-lg > .container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+    max-width: 100vw;
+    top: 0;
+    position: absolute;
+  }
+}
+.navbar-toggler {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+label {
+  margin-bottom: 0 !important;
+}
+label span.MuiTypography-root {
+  color: white;
+  font-size: 12px;
+}
+.MuiFormGroup-root {
+  align-items: center;
+  height: fit-content;
+}
+.MuiFormControlLabel-root {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+}
+.header-user-dropdown-button.btn {
+  padding: 0px !important;
+}
+
+.userDropdown {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.userLogin {
+  display: flex !important;
+  margin-left: auto;
+  margin-right: 16px;
+}
+
+#basic-navbar-nav {
+  max-width: 100vw;
+}
+@media screen and (max-width: 992px) {
+  .navbar-collapse {
+    background-color: black;
+    padding: 30px;
+    margin-left: -16px;
+    max-width: 100vw;
+  }
+  .userLogin {
+    display: flex !important;
+    margin-left: auto;
+    flex-direction: column;
+  }
+}
