@@ -77,7 +77,7 @@ This is not included in the repo as it is a security risk. It can be obtained fr
 Run the backend with Docker Compose:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 This will:
@@ -152,14 +152,14 @@ docker compose exec django python GlobalTraqs/manage.py collectstatic
 - When you change Python dependencies, rebuild the backend container:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 - When you change environment variables, restart the containers:
 
 ```bash
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 - Frontend hot reloads automatically when you save changes in `src/`.
@@ -192,7 +192,7 @@ Make sure `REACT_APP_API_URL` in `frontend/src/.env` points to the backend (`htt
 Run a clean rebuild:
 
 ```bash
-docker-compose down -v
-docker-compose up --build
+docker compose down -v
+docker compose up --build
 ```
 
