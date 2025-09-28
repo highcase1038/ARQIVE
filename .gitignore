@@ -12,7 +12,7 @@ __pycache__/
 *.coverage
 *.env
 *.mo
-
+*.sql
 # Django static / media (collected or generated files)
 staticfiles/
 env/
@@ -74,11 +74,3 @@ Thumbs.db
 *.log
 *.out
 
-# -----------------------------------------------------------------------------
-# Project-specific ignores
-# -----------------------------------------------------------------------------
-# If you have a database dump you don't want in Git:
-docker/postgres/defaultdb.sql
-
-# If you have local scripts not for students:
-frontend/findPictures.sh
