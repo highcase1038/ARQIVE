@@ -78,8 +78,7 @@ Thumbs.db
 # Project-specific ignores
 # -----------------------------------------------------------------------------
 # If you have a database dump you don't want in Git:
-docker/postgres/*.sql
-docker/postgres/*.dump
+docker/postgres/defaultdb.sql
 
 # If you have local scripts not for students:
 frontend/findPictures.sh
