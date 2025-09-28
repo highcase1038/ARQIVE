@@ -40,12 +40,13 @@ This repository is organized as a **monorepo** — both the frontend and backend
 
 ```bash
 git clone https://github.com/your-username/arqive.git
-cd arqive
 ```
 
 ---
 
 ### 2. Configure Environment Variables and Database Dump
+
+**Environment Variables**
 
 This project uses `.env` files for secrets and configuration.  
 These files are **NOT committed to Git** for security reasons.
@@ -58,12 +59,15 @@ Sample development environment files are included:
 Before running the project, **copy them to `.env`**:
 
 ```bash
+cd arqive
 cp frontend/src/.env.development frontend/src/.env
 cp docker/django/.env.development docker/django/.env
 ```
+**Databse Dump**
 
 A database dump must be placed at: 
 - `docker/postgres/defaultdb.sql`
+
 This is not included in the repo as it is a security risk. It can be obtained from the team lead.
 
 ---
