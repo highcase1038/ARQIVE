@@ -74,6 +74,15 @@ This is not included in the repo as it is a security risk. It can be obtained fr
 
 ### 3. Start Backend (Django + Postgres)
 
+Build and load the database:
+
+```bash
+docker compose up db
+```
+
+This builds the container and loads the defaultdb.sql file.  Anytime you run 'docker compose down -v --remove-orphans' you'll need to run this or the first time run 'docker compose up' the database will have to build and will not be ready before the Django service.
+
+
 Run the backend with Docker Compose:
 
 ```bash
@@ -183,10 +192,7 @@ docker compose up -d
 ## 🛠️ Troubleshooting
 
 **❌ Database connection error:**  
-Check that `docker/django/.env` has a valid `DATABASE_URL` and that the `postgres` service is running.
-
-**❌ API calls failing in frontend:**  
-Make sure `REACT_APP_API_URL` in `frontend/src/.env` points to the backend (`http://localhost:8000/api` in development).
+Try rebuilding the `db` container `docker compose up db`
 
 **❌ Docker won't start:**  
 Run a clean rebuild:
