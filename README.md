@@ -53,14 +53,14 @@ These files are **NOT committed to Git** for security reasons.
 
 Sample development environment files are included:
 
-- `frontend/src/.env.development`
+- `frontend/.env.development`
 - `docker/django/.env.development`
 
 Before running the project, **copy them to `.env`**:
 
 ```bash
 cd arqive
-cp frontend/src/.env.development frontend/src/.env
+cp frontend/.env.development frontend/.env
 cp docker/django/.env.development docker/django/.env
 ```
 **Databse Dump**
