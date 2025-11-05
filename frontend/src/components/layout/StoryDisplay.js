@@ -219,7 +219,7 @@ function StoryDisplay({
                   </div>
                   <div>
                     <h5>
-                      {pin.is_anonymous_pin
+                      {pin.is_anonymous_pin || !pin.owner || !pin.username
                         ? (
                           <p className="story-page-story-address">
                             Posted by:{" "}

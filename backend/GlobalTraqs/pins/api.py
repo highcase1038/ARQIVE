@@ -42,10 +42,9 @@ class DateFilter(FilterSet):
     endDate_lte = django_filters.DateTimeFilter(
         field_name="endDate", lookup_expr='lte')
 
-    class Meta:
+    class Meta:  
         model = pin
-        fields = ['startDate_gte', 'startDate_lte',
-                  'endDate_gte', 'endDate_lte']
+        fields = ['startDate', 'endDate']
 
 
 # used to split url query at ,
@@ -70,18 +69,36 @@ class PinCoordFilter(FilterSet):
         field_name="longitude", lookup_expr='lte')
 
 
+# Custom date filter that includes NULL dates
+class NullableDateFilter(django_filters.DateFilter):
+    def filter(self, qs, value):
+        if value:
+            if self.lookup_expr == 'gte':
+                return qs.filter(
+                    Q(**{f'{self.field_name}__{self.lookup_expr}': value}) |
+                    Q(**{f'{self.field_name}__isnull': True})
+                )
+            elif self.lookup_expr == 'lte':
+                return qs.filter(
+                    Q(**{f'{self.field_name}__{self.lookup_expr}': value}) |
+                    Q(**{f'{self.field_name}__isnull': True})
+                )
+        return qs
+
+
 # use the list filter above on the category field to match for or cases
 class PinSearchFilter(FilterSet):
     categories = ListFilter(field_name='category', lookup_expr='in')
-
-    startDate_gte = django_filters.DateTimeFilter(
+    
+    # using filter to apply stories do not have date value
+    startDate = NullableDateFilter(
         field_name="startDate", lookup_expr='gte')
-    startDate_lte = django_filters.DateTimeFilter(
-        field_name="startDate", lookup_expr='lte')
-    endDate_gte = django_filters.DateTimeFilter(
-        field_name="endDate", lookup_expr='gte')
-    endDate_lte = django_filters.DateTimeFilter(
+    endDate = NullableDateFilter(
         field_name="endDate", lookup_expr='lte')
+    
+    class Meta:
+        model = pin
+        fields = ['categories', 'startDate', 'endDate']
 
 
 class PinViewSet(viewsets.ModelViewSet):
@@ -92,7 +109,7 @@ class PinViewSet(viewsets.ModelViewSet):
             output_field=IntegerField()
         ))
 
-    )
+    ).order_by('-id')
     
 
     # permission_classes = [
@@ -106,12 +123,11 @@ class PinViewSet(viewsets.ModelViewSet):
 
 
 class PinSearchViewSet(viewsets.ModelViewSet):
-    queryset = pin.objects.all()
+    queryset = pin.objects.all().order_by('-id')
     serializer_class = PinSerializer
     filter_backends = [filters.SearchFilter, DjangoFilterBackend]
-    filterset_fields = '__all__'
-    filter_class = PinSearchFilter
-    search_fields = ['title', 'description']
+    filterset_class = PinSearchFilter  
+    search_fields = ['title', 'description', 'address', 'locality', 'region', 'country', 'postCode']
 
 
 class MinPinDate(viewsets.ReadOnlyModelViewSet):

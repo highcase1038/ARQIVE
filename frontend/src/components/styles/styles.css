@@ -83,3 +83,25 @@ label span.MuiTypography-root {
     flex-direction: column;
   }
 }
+
+/* Profile Image Modal - Fix cropper drag issue */
+.reactEasyCrop_Container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  user-select: none;
+  touch-action: none;
+  cursor: move;
+}
+
+.reactEasyCrop_Image {
+  will-change: transform;
+  cursor: move;
+}
+
+.reactEasyCrop_CropArea {
+  cursor: move;
+}

@@ -9,8 +9,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class pin(models.Model):
+    # Modify CASCADE to SET_NULL
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
-                              null=True, on_delete=models.CASCADE, related_name='userStories')
+                              null=True, on_delete=models.SET_NULL, related_name='userStories')
     title = models.CharField(max_length=150)
     description = models.TextField()
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
@@ -24,8 +25,9 @@ class pin(models.Model):
     is_anonymous_pin = models.BooleanField(default=False, blank=False)
     postDate = models.DateField('postDate', blank=True, null=True)
     lastEditDate = models.DateField('lastEditDate', blank=True, null=True)
+    # Modify CASCADE to SET_NULL
     lastPersonEdit = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     # addresses and postcode might differ in other countries
     postCode = models.CharField(blank=True, null=True, max_length=150)
     locality = models.CharField(blank=True, null=True, max_length=150)
@@ -34,7 +36,7 @@ class pin(models.Model):
     address = models.CharField(blank=True, null=True, max_length=150)
 
     class Meta:
-        ordering = ['id']
+        ordering = ['-id']
 
     def __str__(self):
         """String for representing the Model object."""
