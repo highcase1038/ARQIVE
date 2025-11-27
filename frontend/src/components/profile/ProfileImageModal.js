@@ -10,6 +10,7 @@ import {
 } from "reactstrap";
 import Cropper from "react-easy-crop";
 import Slider from "@material-ui/core/Slider";
+import "../styles/styles.css";
 
 const buttonStyle = {
   float: "right",
@@ -27,21 +28,24 @@ export default function ProfileImageModal(props) {
         centered
       >
         <ModalHeader toggle={props.toggle}> Add a Profile Image </ModalHeader>
-        <ModalBody style={{ height: "300px" }}>
+        <ModalBody style={{ height: "400px", position: "relative" }}>
           <Form>
             <FormGroup>
               {props.image && (
-                <Cropper
-                  image={props.image}
-                  crop={props.crop}
-                  zoom={props.zoom}
-                  cropSize={size}
-                  aspect={aspect}
-                  onCropChange={props.setcrop}
-                  onZoomChange={props.setZoom}
-                  onCropComplete={props.onCropComplete}
-                  cropShape="round"
-                />
+                <div style={{ position: "relative", width: "100%", height: "350px", background: "#333" }}>
+                  <Cropper
+                    image={props.image}
+                    crop={props.crop}
+                    zoom={props.zoom}
+                    cropSize={size}
+                    aspect={aspect}
+                    onCropChange={props.setcrop}
+                    onZoomChange={props.setZoom}
+                    onCropComplete={props.onCropComplete}
+                    cropShape="round"
+                    showGrid={false}
+                  />
+                </div>
               )}
             </FormGroup>
           </Form>

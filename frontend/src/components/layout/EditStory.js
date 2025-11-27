@@ -14,7 +14,8 @@ import { Editor } from "@tinymce/tinymce-react";
 import DatePicker from "react-date-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { editPin } from "../../actions/pins";
+import { editPin, deletePins } from "../../actions/pins";
+import ModalDeleteConfirm from "../Map/PinForms/ModalDeleteConfirm";
 import { useRef, useState } from "react";
 import { OpenStreetMapProvider } from "leaflet-geosearch";
 import HelpOutlineSharpIcon from "@material-ui/icons/HelpOutlineSharp";
@@ -32,6 +33,9 @@ function EditStory(props) {
   const toggleErrorModal = () => {
     setErrorModal(() => !errorModal);
   };
+
+  const [deleteModal, setDeleteModal] = useState(false);
+  const toggleDeleteModal = () => setDeleteModal(!deleteModal);
 
   const editorRef = useRef(null);
 
@@ -100,6 +104,29 @@ function EditStory(props) {
       setErrorModal(true);
     }
   };
+
+  const handleDelete = (e) => {
+  e.preventDefault();
+  
+  // Delete the pin
+  dispatch(deletePins(props.pinData.id));
+  
+  // Close modals
+  toggleDeleteModal();
+  
+  // Close edit story modal if toggle exists
+  if (props.toggle) {
+    props.toggle();
+  }
+  
+  // Close edit story by setting state
+  if (props.setEditStory) {
+    props.setEditStory(false);
+  }
+  
+  // Redirect to home
+  history.push('/');
+};
 
   return (
     <div>
@@ -270,6 +297,15 @@ function EditStory(props) {
           >
             save changes
           </Button>
+
+          <Button 
+            type="button" 
+            className="search-bar-btn"
+            onClick={toggleDeleteModal}
+          >
+            delete story
+          </Button>
+
         </div>
       </Form>
       <Modal
@@ -314,7 +350,14 @@ function EditStory(props) {
             go back
           </Button>
         </ModalBody>
+
       </Modal>
+      {/* Delete Confirmation Modal */}
+      <ModalDeleteConfirm
+        modalState={deleteModal}
+        toggle={toggleDeleteModal}
+        onSubmit={handleDelete}
+      />
     </div>
   );
 }
