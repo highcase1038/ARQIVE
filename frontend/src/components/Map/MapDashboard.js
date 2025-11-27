@@ -1,4 +1,4 @@
-import React, { Fragment, Suspense, useEffect, useState, useRef } from "react";
+import React, { Fragment, Suspense, useEffect, useState, useRef, useMemo } from "react";
 
 import {
   deletePins,
@@ -48,6 +48,37 @@ export default function MapDashboard() {
     }
   };
 
+  // Method to handle drop pin
+  const handleDropPin = (locationData) => {
+    setDroppedLocation(locationData);
+    setDroppedMarker(locationData.marker);
+    setShouldOpenAddStory(true);
+  };
+
+  // Clear Marker
+  const clearDroppedMarker = () => {
+    if (droppedMarker) {
+      droppedMarker.remove();
+      setDroppedMarker(null);
+    }
+    setDroppedLocation(null);
+    setShouldOpenAddStory(false);
+    
+  };
+
+
+  // Search current location
+  const handleSearchLocation = (locationData) => {
+  setSearchLocation(locationData);
+  setIsSearch(true);  //search stories tab
+  };
+
+  // clear searching location
+  const handleClearSearchLocation = () => {
+    setSearchLocation(null);
+    setIsSearch(false);
+  };
+
   const onDelProfile = () => {
     dispatch(deletePins(removalFav));
     setPinDeleted(true);
@@ -69,6 +100,63 @@ export default function MapDashboard() {
   const { isAuthenticated, user } = auth;
 
   const [addAddress, setAddAddress] = useState(false);
+
+  // Drop Pin Status
+  const [droppedLocation, setDroppedLocation] = useState(null);
+  const [shouldOpenAddStory, setShouldOpenAddStory] = useState(false);
+
+  //Marker
+  const [droppedMarker, setDroppedMarker] = useState(null);
+
+
+  // Search status
+  const [searchLocation, setSearchLocation] = useState(null);
+
+  // Calcutate math
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // earth radium in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  };
+
+  const filteredMapPins = useMemo(() => {
+  console.log('🔍 Filtering pins:', {
+    totalPins: pins.length,
+    searchLocation: searchLocation,
+    isFiltering: searchLocation !== null
+  });
+  
+  if (!searchLocation) {
+    console.log('✅ No filter, returning all pins:', pins.length);
+    return pins;
+  }
+
+  const { latitude, longitude } = searchLocation;
+  
+  const result = pins.filter(pin => {
+    if (latitude && longitude && pin.latitude && pin.longitude) {
+      const distance = calculateDistance(
+        latitude, longitude,
+        Number(pin.latitude), Number(pin.longitude)
+      );
+      return distance < 16;  
+    }
+    return false;
+  });
+  
+  console.log('✅ Filtered result:', result.length, 'pins');
+  return result;
+}, [pins, searchLocation]);
+
+  const isFiltering = searchLocation !== null;
+  
+
 
   //  This should be folded into the getPins API call( );
   //  Every time a story is added django should check and see if the pin's
@@ -98,6 +186,15 @@ export default function MapDashboard() {
                   centerMarker={centerMarker}
                   isSearch={isSearch}
                   setIsSearch={setIsSearch}
+                  // Handle drop pin
+                  droppedLocation={droppedLocation}  
+                  shouldOpenAddStory={shouldOpenAddStory}  
+                  setShouldOpenAddStory={setShouldOpenAddStory}  
+                  searchLocation={searchLocation}  
+                  setSearchLocation={setSearchLocation}  
+                  droppedMarker={droppedMarker}  
+                  clearDroppedMarker={clearDroppedMarker}  
+
                 />
               </Suspense>
               <Switch>
@@ -116,12 +213,20 @@ export default function MapDashboard() {
 
             <LeafletMap
               maplink={"/story"}
-              pins={pins}
+              pins={filteredMapPins}
               mapReference={mapReference}
               // setMapReference={setMapReference}
               user={user}
               isAuthenticated={isAuthenticated}
               centerMarker={centerMarker}
+              onDropPin={handleDropPin}
+
+              onSearchLocation={handleSearchLocation}
+
+              onClearSearchLocation={handleClearSearchLocation} 
+              onClearDroppedMarker={clearDroppedMarker}
+              droppedMarker={droppedMarker} 
+              isFiltering={isFiltering}  
             />
           </div>
         </Route>

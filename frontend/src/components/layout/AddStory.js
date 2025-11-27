@@ -14,10 +14,11 @@ import { Editor } from "@tinymce/tinymce-react";
 import DatePicker from "react-date-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { addPin } from "../../actions/pins";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import HelpOutlineSharpIcon from "@material-ui/icons/HelpOutlineSharp";
 import AddressSearch from "../common/AddressSearch";
+import { personalIcon, communityIcon, historicalIcon } from "../Map/MapIcons";
 const okToPost = {
   ok: true,
 };
@@ -48,7 +49,23 @@ function AddStory(props) {
   const auth = useSelector((state) => state.auth);
   const [errorModal, setErrorModal] = useState(false);
   const [loginModal, setLoginModal] = useState(false);
-  const [addPinValues, setaddPinValues] = useState(defaultAddPinValues);
+
+  //const [addPinValues, setaddPinValues] = useState(defaultAddPinValues);
+  
+  //If there is a droppedLocation, prefill the data.
+  const [addPinValues, setaddPinValues] = useState({
+  ...defaultAddPinValues,
+  ...(props.droppedLocation && {
+    latitude: props.droppedLocation.latitude,
+    longitude: props.droppedLocation.longitude,
+    address: props.droppedLocation.address || '',
+    locality: props.droppedLocation.locality || '',
+    region: props.droppedLocation.region || '',
+    country: props.droppedLocation.country || '',
+    postCode: props.droppedLocation.postCode || '',
+  })
+
+});
 
   const toggleErrorModal = () => {
     setErrorModal(() => !errorModal);
@@ -60,8 +77,53 @@ function AddStory(props) {
 
   const editorRef = useRef(null);
 
+  // Add this useEffect to update the form when the drop pin location changes.
+  useEffect(() => {
+    if (props.droppedLocation) {
+      setaddPinValues(prev => ({
+        ...prev,
+        latitude: props.droppedLocation.latitude,
+        longitude: props.droppedLocation.longitude,
+        address: props.droppedLocation.address || prev.address,
+        locality: props.droppedLocation.locality || prev.locality,
+        region: props.droppedLocation.region || prev.region,
+        country: props.droppedLocation.country || prev.country,
+        postCode: props.droppedLocation.postCode || prev.postCode,
+      }));
+      
+      // Let the map fly to the new location.
+      if (props.centerMarker) {
+        props.centerMarker({
+          latitude: props.droppedLocation.latitude,
+          longitude: props.droppedLocation.longitude,
+        });
+      }
+    }
+  }, [props.droppedLocation]);
+
   const setCategory = (nextCategory) => {
-    setaddPinValues({ ...addPinValues, category: nextCategory });
+  console.log('🎨 Category changed to:', nextCategory);
+  console.log('📍 droppedMarker:', props.droppedMarker);
+  
+  setaddPinValues({ ...addPinValues, category: nextCategory });
+  
+  if (props.droppedMarker) {
+    console.log('✅ Marker exists, changing icon...');
+    let newIcon;
+    if (nextCategory === 1) {
+      newIcon = personalIcon;  
+      console.log('Setting personalIcon (pink)');
+    } else if (nextCategory === 2) {
+      newIcon = communityIcon;  
+      console.log('Setting communityIcon (green)');
+    } else if (nextCategory === 3) {
+      newIcon = historicalIcon;
+      console.log('Setting historicalIcon (blue)');
+    }
+    props.droppedMarker.setIcon(newIcon);
+    }
+
+
   };
   const handleAddressChange = (selectedOption) => {
     setaddPinValues({
@@ -81,6 +143,14 @@ function AddStory(props) {
     if (editorRef.current !== undefined) {
       editorRef.current.setContent("");
     }
+    if (props.clearDroppedMarker) {
+    props.clearDroppedMarker();
+    }
+    if (props.setShouldOpenAddStory) {
+    props.setShouldOpenAddStory(false);
+    }
+
+
   };
   // console.log(editorRef);
   const categoryOptions = [
@@ -123,6 +193,10 @@ function AddStory(props) {
         editorRef.current.setContent("");
       }
       props.setKey("stories");
+      if (props.clearDroppedMarker) {
+        props.clearDroppedMarker();
+      }
+
       history.push(`/story`, { storySidebarOpen: true });
     } else {
       setErrorModal(true);

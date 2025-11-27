@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import CloseIcon from "@material-ui/icons/Close";
 import Sidebar from "react-sidebar";
@@ -19,10 +19,30 @@ function SearchSidebar(props) {
       setSidebarOpen(true);
     }
   }
+
   const handleCloseSidebar = () => {
     setSidebarOpen(false);
   }
   mediaQueryList.addEventListener("change", handleMQChange)
+
+  // Add useEffect for drop pin listener.
+  useEffect(() => {
+    if (props.shouldOpenAddStory) {
+      setKey("addStory");  // add a story tab
+      setSidebarOpen(true);  // Keep sidebar opening
+      // reset the flag
+      if (props.setShouldOpenAddStory) {
+        props.setShouldOpenAddStory(false);
+      }
+    }
+  }, [props.shouldOpenAddStory]);
+
+  useEffect(() => {
+  if (props.searchLocation) {
+    setKey("stories");  //stories tab
+    setSidebarOpen(true);  // Keep sidebar 
+  }
+  }, [props.searchLocation]);
 
   const theme = createTheme({
     overrides: {
@@ -73,6 +93,8 @@ function SearchSidebar(props) {
                     isMobile={mediaQueryList.matches}
                     handleCloseSidebar={handleCloseSidebar}
                     {...props}
+                    searchLocation={props.searchLocation} 
+                    setSearchLocation={props.setSearchLocation}  
                   />
                 </Tab>
                 <Tab
@@ -84,6 +106,10 @@ function SearchSidebar(props) {
                     currentPage={key === "addStory"}
                     setKey={setKey}
                     centerMarker={props.centerMarker}
+                    droppedLocation={props.droppedLocation}
+                    droppedMarker={props.droppedMarker}  
+                    clearDroppedMarker={props.clearDroppedMarker} 
+                    setShouldOpenAddStory={props.setShouldOpenAddStory}
                   />
                 </Tab>
               </Tabs>

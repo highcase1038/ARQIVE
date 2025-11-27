@@ -16,6 +16,7 @@ class pin(models.Model):
     description = models.TextField()
     latitude = models.DecimalField(max_digits=9, decimal_places=6)
     longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    
     category = models.ForeignKey(
         "categoryType", on_delete=models.CASCADE, null=True, related_name='selected_category')
     # 1 is community, 2: historical, 3: personal

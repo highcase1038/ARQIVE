@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { searchPins } from "../../actions/pins";
 import Select, { components } from "react-select";
@@ -67,12 +67,92 @@ function StorySearch(props) {
   const minPinDate = useSelector((state) => state.pins.pinMinDate);
   const maxPinDate = useSelector((state) => state.pins.pinMaxDate);
 
+  const [locationFilter, setLocationFilter] = useState(null);
+
+  // Listen searchLocation changing
+  useEffect(() => {
+    if (props.searchLocation) {
+      const { city, region, latitude, longitude } = props.searchLocation;
+      
+      setLocationFilter({
+        city: city || '',
+        region: region || '',
+        latitude,
+        longitude,
+        radius: 16,
+      });
+
+    
+      setTimeout(() => {
+       
+        const start = moment(prevSearchTerms.dateRange?.start || minPinDate).format("YYYY-MM-DD");
+        const end = moment(prevSearchTerms.dateRange?.end || maxPinDate).format("YYYY-MM-DD");
+        
+        let categorySearchQuery = "";
+        const categories = prevSearchTerms.selectedCategories || options;
+        
+        for (const [index, value] of categories.entries()) {
+          if (index < categories.length - 1) {
+            categorySearchQuery += value.value + ",";
+          } else {
+            categorySearchQuery += value.value;
+          }
+        }
+        
+        dispatch(searchPins(prevSearchTerms.searchText || "", categorySearchQuery, start, end));
+      }, 100);
+
+        
+      // delete search location
+      //if (props.setSearchLocation) {
+      //  setTimeout(() => {
+      //    props.setSearchLocation(null);
+      //}, 200);
+      //}
+    }
+  }, [props.searchLocation]);
+
+  // Haversine formula
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Earth radius (km)
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  };
+
+  // Filtering pins
+  const filteredPinData = useMemo(() => {
+  if (!locationFilter) return pinData;
+  
+  const { latitude, longitude } = locationFilter; 
+  
+  // 10 miles
+  return pinData.filter(pin => {
+    if (latitude && longitude && pin.latitude && pin.longitude) {
+      const distance = calculateDistance(
+        latitude, longitude,
+        Number(pin.latitude), Number(pin.longitude)
+      );
+      return distance < 16;
+    }
+    return false;
+  });
+}, [pinData, locationFilter]);
+
+
   const dateRangeDefault = {
     start: minPinDate,
     end: maxPinDate,
     first: Number(moment(minPinDate).format("YYYY")),
     last: Number(moment(maxPinDate).format("YYYY")),
   };
+
+  //
   const [prevSearchTerms, setPrevSearchTerms] = useState({
     searchText: "",
     selectedCategories: options,
@@ -135,7 +215,14 @@ function StorySearch(props) {
         selectedCategories: options,
         dateRange: dateRangeDefault,
       });
+
+      setLocationFilter(null); 
+      if (props.setSearchLocation) {
+        props.setSearchLocation(null);
+      }
       dispatch(getPins());
+
+
     };
 
     function valuetext(value) {
@@ -281,12 +368,62 @@ function StorySearch(props) {
 
   return (
     <>
+      
+      {locationFilter && (
+      <div style={{
+        backgroundColor: '#e3f2fd',
+        padding: '12px 15px',
+        borderRadius: '8px',
+        margin: '10px 5px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+      }}>
+        <div style={{
+          fontFamily: 'Eina, Arial',
+          fontSize: '14px',
+        }}>
+          <div style={{ fontWeight: '600', marginBottom: '3px' }}>
+            📍 Filtering by location
+          </div>
+          <div style={{ fontSize: '13px', color: '#555' }}>
+            {locationFilter.city || locationFilter.region || 'Selected area'}
+          </div>
+        </div>
+        <button
+          onClick={() => {
+            setLocationFilter(null);
+            dispatch(getPins()); // GET PINS
+            if (props.setSearchLocation) {
+              props.setSearchLocation(null);
+            }
+          }}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '20px',
+            color: '#666',
+            padding: '5px 10px',
+          }}
+          title="Clear location filter"
+        >
+          ✕
+        </button>
+      </div>
+      )}
+
+
       <StorySearchForm
-        pinData={pinData}
+        //pinData={pinData}
+        pinData={filteredPinData} 
+
       />
       <StorySearchResults
         loginToggle={props.loginToggle}
-        pinData={pinData}
+        //pinData={pinData}
+        pinData={filteredPinData} 
         maplink={props.maplink}
         centerMarker={props.centerMarker}
         isMobile={props.isMobile}
